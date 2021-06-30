@@ -50,7 +50,7 @@ def restore_env_variables():
 #     yield
 #     if torch.distributed.is_available() and torch.distributed.is_initialized():
 #         torch.distributed.destroy_process_group()
-# 
+#
 
 def pytest_configure(config):
     config.addinivalue_line("markers", "spawn: spawn test in a separate process using torch.multiprocessing.spawn")
