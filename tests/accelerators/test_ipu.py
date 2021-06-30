@@ -113,6 +113,16 @@ def test_accelerator_selected(tmpdir):
 
 
 @RunIf(ipu=True)
+def test_all_stages(tmpdir):
+    model = IPUModel()
+    trainer = Trainer(default_root_dir=tmpdir, fast_dev_run=True, ipus=4)
+    trainer.fit(model)
+    trainer.validate(model)
+    trainer.test(model)
+    trainer.predict(model, model.val_dataloader())
+
+
+@RunIf(ipu=True)
 @pytest.mark.parametrize('ipus', [1, 4])
 def test_all_stages(tmpdir, ipus):
     model = IPUModel()
