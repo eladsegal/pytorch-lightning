@@ -113,7 +113,7 @@ def test_accelerator_selected(tmpdir):
 
 
 @RunIf(ipu=True)
-def test_all_stages(tmpdir):
+def test_all_stages_new(tmpdir):
     model = IPUModel()
     trainer = Trainer(default_root_dir=tmpdir, fast_dev_run=True, ipus=4)
     trainer.fit(model)
