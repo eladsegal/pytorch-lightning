@@ -414,49 +414,49 @@ def _test_accelerator_choice_ddp_cpu_and_plugin(tmpdir, ddp_plugin_class):
     assert trainer.training_type_plugin.parallel_devices == [torch.device("cpu")] * 2
     trainer.fit(model)
 
-
-@mock.patch.dict(
-    os.environ, {
-        "SLURM_NTASKS": "2",
-        "SLURM_JOB_NAME": "SOME_NAME",
-        "SLURM_NODEID": "0",
-        "LOCAL_RANK": "0",
-        "SLURM_PROCID": "0",
-        "SLURM_LOCALID": "0",
-    }
-)
-@mock.patch('torch.cuda.device_count', return_value=0)
-@mock.patch('pytorch_lightning.plugins.DDPPlugin.setup_distributed', autospec=True)
-def test_accelerator_choice_ddp_cpu_custom_cluster(setup_distributed_mock, device_count_mock, tmpdir):
-    """ Test that we choose the custom cluster even when SLURM or TE flags are around """
-
-    class CB(Callback):
-
-        def on_fit_start(self, trainer, pl_module):
-            assert isinstance(trainer.accelerator, CPUAccelerator)
-            assert isinstance(trainer.training_type_plugin, DDPPlugin)
-            assert isinstance(trainer.training_type_plugin.cluster_environment, CustomCluster)
-            raise SystemExit()
-
-    class CustomCluster(LightningEnvironment):
-
-        def master_address(self):
-            return 'asdf'
-
-        def creates_children(self) -> bool:
-            return True
-
-    model = BoringModel()
-    trainer = Trainer(
-        default_root_dir=tmpdir,
-        plugins=[CustomCluster()],
-        fast_dev_run=True,
-        accelerator='ddp_cpu',
-        num_processes=2,
-        callbacks=[CB()]
-    )
-    with pytest.raises(SystemExit):
-        trainer.fit(model)
+#
+# @mock.patch.dict(
+#     os.environ, {
+#         "SLURM_NTASKS": "2",
+#         "SLURM_JOB_NAME": "SOME_NAME",
+#         "SLURM_NODEID": "0",
+#         "LOCAL_RANK": "0",
+#         "SLURM_PROCID": "0",
+#         "SLURM_LOCALID": "0",
+#     }
+# )
+# @mock.patch('torch.cuda.device_count', return_value=0)
+# @mock.patch('pytorch_lightning.plugins.DDPPlugin.setup_distributed', autospec=True)
+# def test_accelerator_choice_ddp_cpu_custom_cluster(setup_distributed_mock, device_count_mock, tmpdir):
+#     """ Test that we choose the custom cluster even when SLURM or TE flags are around """
+#
+#     class CB(Callback):
+#
+#         def on_fit_start(self, trainer, pl_module):
+#             assert isinstance(trainer.accelerator, CPUAccelerator)
+#             assert isinstance(trainer.training_type_plugin, DDPPlugin)
+#             assert isinstance(trainer.training_type_plugin.cluster_environment, CustomCluster)
+#             raise SystemExit()
+#
+#     class CustomCluster(LightningEnvironment):
+#
+#         def master_address(self):
+#             return 'asdf'
+#
+#         def creates_children(self) -> bool:
+#             return True
+#
+#     model = BoringModel()
+#     trainer = Trainer(
+#         default_root_dir=tmpdir,
+#         plugins=[CustomCluster()],
+#         fast_dev_run=True,
+#         accelerator='ddp_cpu',
+#         num_processes=2,
+#         callbacks=[CB()]
+#     )
+#     with pytest.raises(SystemExit):
+#         trainer.fit(model)
 
 
 @mock.patch.dict(
