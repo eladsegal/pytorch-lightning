@@ -455,7 +455,8 @@ def test_accelerator_choice_ddp_cpu_custom_cluster(setup_distributed_mock, devic
         num_processes=2,
         callbacks=[CB()]
     )
-    trainer.fit(model)
+    with pytest.raises(SystemExit):
+        trainer.fit(model)
 
 
 @mock.patch.dict(
