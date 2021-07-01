@@ -415,7 +415,6 @@ def _test_accelerator_choice_ddp_cpu_and_plugin(tmpdir, ddp_plugin_class):
     trainer.fit(model)
 
 
-
 @mock.patch.dict(
     os.environ, {
         "SLURM_NTASKS": "2",
