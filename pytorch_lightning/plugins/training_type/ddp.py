@@ -209,8 +209,6 @@ class DDPPlugin(ParallelPlugin):
         if self.parallel_devices is None:
             raise MisconfigurationException("you selected (distribute_backend = ddp) but did not set Trainer(gpus=?)")
 
-        # SHOULD NOT AFFECT IPU OMG PLEASE DONT
-
         os.environ["PL_IN_DDP_SUBPROCESS"] = "1"
         os.environ["WORLD_SIZE"] = f"{self.num_processes * self.num_nodes}"
 

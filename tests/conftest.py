@@ -42,7 +42,6 @@ def restore_env_variables():
     os.environ.update(env_backup)
 
 
-# IT'S NOT THE CONFTEST!!
 @pytest.fixture(scope="function", autouse=True)
 def teardown_process_group():
     """ Ensures that the distributed process group gets closed before the next test runs. """
