@@ -501,7 +501,7 @@ class TrainingEpochLoop(loops.Loop[_OUTPUTS_TYPE]):
             # if `check_val_every_n_epoch is `None`, run a validation loop every n training batches
             # else condition it based on the batch_idx of the current epoch
             current_iteration = (
-                self._batches_that_stepped if self.trainer.check_val_every_n_epoch is None else batch_idx
+                (self.trainer.num_training_batches * self.trainer.current_epoch) + batch_idx if self.trainer.check_val_every_n_epoch is None else batch_idx
             )
             is_val_check_batch = (current_iteration + 1) % self.trainer.val_check_batch == 0
 
